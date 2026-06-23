@@ -122,6 +122,10 @@ export function isActiveSubscriptionStatus(
 // what plan the organization is effectively on (taking into account downgrades)
 // use getEffectiveAccountPlan() instead.
 export function getAccountPlan(org: MinimalOrganization): AccountPlan {
+  // Whitelabel internal build: self-hosted always runs as enterprise
+  if (!stringToBoolean(process.env.IS_CLOUD)) {
+    return "enterprise";
+  }
   if (stringToBoolean(process.env.IS_CLOUD)) {
     // If the org has the enterprise flag, return enterprise
     // Can remove this when all enterprise orgs are migrated to a license
@@ -1019,6 +1023,10 @@ export function isAirGappedLicenseKey(licenseKey: string | undefined): boolean {
 }
 
 export function getEffectiveAccountPlan(org: MinimalOrganization): AccountPlan {
+  // Whitelabel internal build: self-hosted always runs as enterprise
+  if (!stringToBoolean(process.env.IS_CLOUD)) {
+    return "enterprise";
+  }
   let basicPlan: AccountPlan;
 
   if (stringToBoolean(process.env.IS_CLOUD)) {

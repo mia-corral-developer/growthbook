@@ -90,7 +90,7 @@ RUN pnpm postinstall
 # Building this image from source requires `docker login dhi.io` (free Docker
 # Hub account, DHI Community tier). Pulling the published growthbook/growthbook
 # image needs no such login.
-FROM dhi.io/node:${NODE_MAJOR}-debian12-dev
+FROM node:24-bookworm
 ARG PYTHON_MAJOR
 WORKDIR /usr/local/src/app
 # The hardened node image already bundles pnpm, so (unlike a stock node base) we
@@ -100,7 +100,8 @@ RUN apt-get update && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* && \
   ln -sf /usr/bin/python${PYTHON_MAJOR} /usr/local/bin/python3 && \
-  ln -sf /usr/bin/python${PYTHON_MAJOR} /usr/local/bin/python
+  ln -sf /usr/bin/python${PYTHON_MAJOR} /usr/local/bin/python && \
+  corepack enable && corepack prepare pnpm@10.33.4 --activate
 
 # Copy Python virtualenv from build stage
 ENV VIRTUAL_ENV=/opt/venv
